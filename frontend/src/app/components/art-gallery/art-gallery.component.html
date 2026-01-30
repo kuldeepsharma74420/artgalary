@@ -1,0 +1,115 @@
+<div class="art-gallery">
+  <div class="gallery-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h2>Community Gallery</h2>
+        <p>Discover amazing AI-generated artwork from our community</p>
+      </div>
+      <button (click)="refresh()" class="refresh-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="23,4 23,10 17,10"></polyline>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+        </svg>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading amazing artworks...</p>
+  </div>
+  
+  <div *ngIf="error" class="error-state">
+    <div class="error-icon">😞</div>
+    <h3>Oops! Something went wrong</h3>
+    <p>{{ error }}</p>
+    <button (click)="refresh()" class="retry-btn">Try Again</button>
+  </div>
+
+  <div *ngIf="!loading && artworks.length === 0" class="empty-state">
+    <div class="empty-icon">🎨</div>
+    <h3>No artworks yet</h3>
+    <p>Be the first to create something amazing!</p>
+  </div>
+
+  <div *ngIf="!loading && artworks.length > 0" class="gallery-grid">
+    <div *ngFor="let artwork of artworks; trackBy: trackByArtwork" class="artwork-card">
+      <div class="card-image">
+        <img [src]="artwork.imageUrl" [alt]="artwork.title" (click)="openImageModal(artwork)" />
+        <div class="image-actions">
+          <button (click)="openImageModal(artwork)" class="action-btn enlarge-btn" title="View Full Size">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+            </svg>
+          </button>
+          <button (click)="downloadImage(artwork)" class="action-btn download-btn" title="Download">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7,10 12,15 17,10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="card-content">
+        <h3>{{ artwork.title }}</h3>
+        <p class="prompt">{{ artwork.prompt }}</p>
+        <div class="card-footer">
+          <span class="date">{{ artwork.createdAt | date:'MMM d, y' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced Image Modal -->
+  <div *ngIf="selectedArtwork" class="modal-overlay" (click)="closeModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ selectedArtwork.title }}</h3>
+        <button class="close-btn" (click)="closeModal()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="modal-content">
+        <div class="modal-image">
+          <img [src]="selectedArtwork.imageUrl" [alt]="selectedArtwork.title" />
+        </div>
+        
+        <div class="modal-details">
+          <div class="details-content">
+            <h4>{{ selectedArtwork.title }}</h4>
+            <div class="prompt-section">
+              <label>Creative Prompt:</label>
+              <p>{{ selectedArtwork.prompt }}</p>
+            </div>
+            <div class="meta-info">
+              <span class="created-date">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12,6 12,12 16,14"></polyline>
+                </svg>
+                {{ selectedArtwork.createdAt | date:'MMM d, y - h:mm a' }}
+              </span>
+            </div>
+          </div>
+          
+          <div class="modal-actions">
+            <button (click)="downloadImage(selectedArtwork)" class="download-modal-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7,10 12,15 17,10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Download Image
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

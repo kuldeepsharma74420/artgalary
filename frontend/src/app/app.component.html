@@ -1,0 +1,42 @@
+<div class="app">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <h1>🎨 {{ title }}</h1>
+        <p>Create stunning AI artwork with DALL-E 3</p>
+      </div>
+      <nav class="nav-tabs">
+        <button 
+          class="nav-tab" 
+          [class.active]="activeTab === 'generator'"
+          (click)="setActiveTab('generator')">
+          Generate Art
+        </button>
+        <button 
+          class="nav-tab" 
+          [class.active]="activeTab === 'gallery'"
+          (click)="setActiveTab('gallery')">
+          Gallery
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <!-- Generator Tab -->
+      <div class="tab-content" [class.active]="activeTab === 'generator'">
+        <app-art-generator></app-art-generator>
+      </div>
+      
+      <!-- Gallery Tab -->
+      <div class="tab-content" [class.active]="activeTab === 'gallery'">
+        <app-art-gallery></app-art-gallery>
+      </div>
+    </div>
+  </main>
+</div>
+
+<router-outlet />
